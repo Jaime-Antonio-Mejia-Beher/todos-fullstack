@@ -1,17 +1,33 @@
-// interaction with database goes here
-// import { getTodos } from "mongoose"
-import Todo from "../models/ToDoModel"
+import Todo from "../models/ToDoModel.js";
 
-const getTodos = async(req, res) => {
-    try {
-        const todos = await Todo.find() //request todos form database
-        res.status(200).json(todos) // send to client what we returned from database
-    } catch(error) {
-        console.log(err.message)
-        res.status(400).json(err)
-    }
-}
+// Exporting individual functions as named exports
+export const getTodos = async (req, res) => {
+  try {
+    const todos = await Todo.find();
+    res.status(200).json(todos);
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json(error);
+  }
+};
 
-export default {
-    getTodos
-}
+export const createTodo = async (req, res) => {
+  try {
+    console.log(req.body);
+    const todo = await Todo.create(req.body);
+    res.status(200).json(todo);
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json(error);
+  }
+};
+
+export const deleteTodo = async (req, res) => {
+  try {
+    await Todo.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Successfully deleted" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json(error);
+  }
+};

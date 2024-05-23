@@ -2,6 +2,8 @@ import express from "express";
 import mongoConfig from "./config.js";
 import 'dotenv/config'
 import Todo from "./models/ToDoModel.js";
+import todoRoutes from './routes/todoRoutes.js'
+import cors from 'cors';
 
 const app = express();
 
@@ -11,15 +13,9 @@ app.get('/', (req, res) => {
     res.json("Hello from server...STILL WORKING")
 })
 
-app.get('/api/todos', async(req, res) => {
-    try {
-        const todos = await Todo.find() //request todos form database
-        res.status(200).json(todos) // send to client what we returned from database
-    } catch(error) {
-        console.log(err.message)
-        res.status(400).json(err)
-    }
-})
+app.use(cors())
+app.use(express.json())
+app.use('/api/todos', todoRoutes)
 
 app.listen(PORT, () => {
     console.log("Listening on PORT:", PORT)
